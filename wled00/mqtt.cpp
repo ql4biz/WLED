@@ -166,6 +166,21 @@ void publishMqtt()
 
 bool initMqtt()
 {
+  // DEBUG_PRINTLN(F("initMqtt"));
+
+  #ifdef MQTT_ENABLED
+    DEBUG_PRINTLN(F("Configuring MQTT"));
+    mqttEnabled = true;
+    strcpy(mqttServer, MQTT_SERVER);
+    strcpy(mqttUser, MQTT_USER);
+    strcpy(mqttPass, MQTT_PASS);
+    strcpy(mqttClientID, MQTT_CLIENT_ID);
+    strcpy(mqttDeviceTopic, MQTT_DEVICE_TOPIC);
+    strcpy(mqttGroupTopic, MQTT_GROUP_TOPIC);
+    mqttPort = MQTT_PORT;
+    retainMqttMsg = MQTT_RETAIN;
+  #endif
+
   if (!mqttEnabled || mqttServer[0] == 0 || !WLED_CONNECTED) return false;
 
   if (mqtt == nullptr) {
