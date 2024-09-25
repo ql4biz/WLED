@@ -3739,8 +3739,36 @@ static const char _data_FX_MODE_PERCENT[] PROGMEM = "Percent@,% of fill,,,,One c
  * Modulates the brightness similar to a heartbeat
  * (unimplemented?) tries to draw an ECG approximation on a 2D matrix
  */
+// uint16_t mode_heartbeat(void) {
+//   uint8_t bpm = 40 + (SEGMENT.speed >> 3);
+//   uint32_t msPerBeat = (60000L / bpm);
+//   uint32_t secondBeat = (msPerBeat / 3);
+//   uint32_t bri_lower = SEGENV.aux1;
+//   unsigned long beatTimer = strip.now - SEGENV.step;
+
+//   bri_lower = bri_lower * 2042 / (2048 + SEGMENT.intensity);
+//   SEGENV.aux1 = bri_lower;
+
+//   if ((beatTimer > secondBeat) && !SEGENV.aux0) { // time for the second beat?
+//     SEGENV.aux1 = UINT16_MAX; //3/4 bri
+//     SEGENV.aux0 = 1;
+//   }
+//   if (beatTimer > msPerBeat) { // time to reset the beat timer?
+//     SEGENV.aux1 = UINT16_MAX; //full bri
+//     SEGENV.aux0 = 0;
+//     SEGENV.step = strip.now;
+//   }
+
+//   for (int i = 0; i < SEGLEN; i++) {
+//     SEGMENT.setPixelColor(i, color_blend(SEGMENT.color_from_palette(i, true, PALETTE_SOLID_WRAP, 0), SEGCOLOR(1), 255 - (SEGENV.aux1 >> 8)));
+//   }
+
+//   return FRAMETIME;
+// }
 uint16_t mode_heartbeat(void) {
-  uint8_t bpm = 40 + (SEGMENT.speed >> 3);
+  // Set BPM range between 50 and 178, using speed parameter to control it
+  uint8_t bpm = 50 + (128 * SEGMENT.speed / 255);  // Custom BPM based on heart rate range
+  
   uint32_t msPerBeat = (60000L / bpm);
   uint32_t secondBeat = (msPerBeat / 3);
   uint32_t bri_lower = SEGENV.aux1;
